@@ -120,7 +120,10 @@ Follow the same instructions as in the Windows section above to get your:
    ```
 3. Save and close the file
 
-#### Step 5: Run the Application
+#### Step 5: Create a Virtual Environment in Python
+1. source venv/bin/activate
+
+#### Step 6: Run the Application
 1. Make the run script executable:
    ```
    chmod +x run_app.sh
