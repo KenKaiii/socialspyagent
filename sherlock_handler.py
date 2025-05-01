@@ -29,87 +29,183 @@ def run_sherlock(username: str, output_dir: str = "Output Spy") -> Optional[subp
         CompletedProcess object if successful, None otherwise
     """
     import os
+    import platform
 
     # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
 
-    # Try to run sherlock with the simplest approach
+    # Check if we're on macOS - prioritize module approach for Mac
+    is_mac = platform.system() == "Darwin"
+
+    # First verify sherlock is installed
     try:
-        # First, try the most basic command without changing directory
-        def run_sherlock_basic():
-            return subprocess.run(
-                ["sherlock", username],
-                shell=True,
+        # Try to import sherlock_project to verify it's installed
+        import importlib.util
+        sherlock_spec = importlib.util.find_spec("sherlock_project")
+        if sherlock_spec is None:
+            print_error("Sherlock module is not installed. Installing it now...")
+            # Try to install sherlock if not found
+            install_result = subprocess.run(
+                [sys.executable, "-m", "pip", "install", "sherlock-project"],
                 capture_output=True,
                 text=True
             )
-
-        print_info("Running sherlock...")
-        result = run_with_spinner(
-            run_sherlock_basic,
-            f"Searching for '{username}' across social networks...",
-            "sherlock",  # Custom styling
-        )
-
-        # Check if the command was successful
-        if result.returncode == 0:
-            # Save the output to our custom location
-            output_file = os.path.join(output_dir, f"{username}.txt")
-            with open(output_file, "w", encoding="utf-8") as f:
-                f.write(result.stdout)
-
-            # Check if there's a file in the root directory and remove it
-            root_file = f"{username}.txt"
-            if os.path.exists(root_file):
-                try:
-                    os.remove(root_file)
-                except Exception:
-                    pass
-
-            return result
+            if install_result.returncode != 0:
+                print_error(f"Failed to install sherlock: {install_result.stderr}")
+                print_error("Please install sherlock manually: pip install sherlock-project")
+                return None
+            else:
+                print_success("Sherlock installed successfully.")
     except Exception as e:
-        print_error(f"Error running sherlock: {str(e)}")
+        print_error(f"Error checking sherlock installation: {str(e)}")
 
-    # If the first method failed, try with python -m sherlock
-    try:
-        def run_sherlock_module():
-            return subprocess.run(
-                [sys.executable, "-m", "sherlock", username],
-                capture_output=True,
-                text=True
+    # For Mac, try the module approach first
+    if is_mac:
+        # Try with python -m sherlock first on Mac
+        try:
+            def run_sherlock_module():
+                return subprocess.run(
+                    [sys.executable, "-m", "sherlock_project", username],
+                    capture_output=True,
+                    text=True
+                )
+
+            print_info("Running sherlock as a Python module...")
+            result = run_with_spinner(
+                run_sherlock_module,
+                f"Searching for '{username}' across social networks...",
+                "sherlock",  # Custom styling
             )
 
-        print_info("Trying alternative method...")
-        result = run_with_spinner(
-            run_sherlock_module,
-            f"Searching for '{username}' across social networks...",
-            "sherlock",  # Custom styling
-        )
+            # Check if the command was successful
+            if result.returncode == 0:
+                # Save the output to our custom location
+                output_file = os.path.join(output_dir, f"{username}.txt")
+                with open(output_file, "w", encoding="utf-8") as f:
+                    f.write(result.stdout)
 
-        # Check if the command was successful
-        if result.returncode == 0:
-            # Save the output to our custom location
-            output_file = os.path.join(output_dir, f"{username}.txt")
-            with open(output_file, "w", encoding="utf-8") as f:
-                f.write(result.stdout)
+                # Check if there's a file in the root directory and remove it
+                root_file = f"{username}.txt"
+                if os.path.exists(root_file):
+                    try:
+                        os.remove(root_file)
+                    except Exception:
+                        pass
 
-            # Check if there's a file in the root directory and remove it
-            root_file = f"{username}.txt"
-            if os.path.exists(root_file):
-                try:
-                    os.remove(root_file)
-                except Exception:
-                    pass
+                return result
+        except Exception as e:
+            print_error(f"Error running sherlock module: {str(e)}")
 
-            return result
-    except Exception as e:
-        print_error(f"Error running sherlock module: {str(e)}")
+        # If module approach failed on Mac, try direct command without shell=True
+        try:
+            def run_sherlock_direct():
+                return subprocess.run(
+                    ["sherlock", username],
+                    capture_output=True,
+                    text=True
+                )
+
+            print_info("Trying alternative method...")
+            result = run_with_spinner(
+                run_sherlock_direct,
+                f"Searching for '{username}' across social networks...",
+                "sherlock",  # Custom styling
+            )
+
+            if result.returncode == 0:
+                # Save the output to our custom location
+                output_file = os.path.join(output_dir, f"{username}.txt")
+                with open(output_file, "w", encoding="utf-8") as f:
+                    f.write(result.stdout)
+
+                # Check if there's a file in the root directory and remove it
+                root_file = f"{username}.txt"
+                if os.path.exists(root_file):
+                    try:
+                        os.remove(root_file)
+                    except Exception:
+                        pass
+
+                return result
+        except Exception as e:
+            print_error(f"Error running sherlock directly: {str(e)}")
+    else:
+        # For non-Mac systems, try direct command first (without shell=True)
+        try:
+            def run_sherlock_direct():
+                return subprocess.run(
+                    ["sherlock", username],
+                    capture_output=True,
+                    text=True
+                )
+
+            print_info("Running sherlock...")
+            result = run_with_spinner(
+                run_sherlock_direct,
+                f"Searching for '{username}' across social networks...",
+                "sherlock",  # Custom styling
+            )
+
+            # Check if the command was successful
+            if result.returncode == 0:
+                # Save the output to our custom location
+                output_file = os.path.join(output_dir, f"{username}.txt")
+                with open(output_file, "w", encoding="utf-8") as f:
+                    f.write(result.stdout)
+
+                # Check if there's a file in the root directory and remove it
+                root_file = f"{username}.txt"
+                if os.path.exists(root_file):
+                    try:
+                        os.remove(root_file)
+                    except Exception:
+                        pass
+
+                return result
+        except Exception as e:
+            print_error(f"Error running sherlock directly: {str(e)}")
+
+        # If direct command failed, try with python -m sherlock
+        try:
+            def run_sherlock_module():
+                return subprocess.run(
+                    [sys.executable, "-m", "sherlock_project", username],
+                    capture_output=True,
+                    text=True
+                )
+
+            print_info("Trying alternative method...")
+            result = run_with_spinner(
+                run_sherlock_module,
+                f"Searching for '{username}' across social networks...",
+                "sherlock",  # Custom styling
+            )
+
+            # Check if the command was successful
+            if result.returncode == 0:
+                # Save the output to our custom location
+                output_file = os.path.join(output_dir, f"{username}.txt")
+                with open(output_file, "w", encoding="utf-8") as f:
+                    f.write(result.stdout)
+
+                # Check if there's a file in the root directory and remove it
+                root_file = f"{username}.txt"
+                if os.path.exists(root_file):
+                    try:
+                        os.remove(root_file)
+                    except Exception:
+                        pass
+
+                return result
+        except Exception as e:
+            print_error(f"Error running sherlock module: {str(e)}")
 
     # If all methods failed, show error and suggestions
     print_error("Failed to run sherlock. Please try the following:")
     print_error("1. Make sure sherlock is installed: pip install sherlock-project")
     print_error("2. Try activating your virtual environment before running the script")
     print_error("3. Try running the script from VS Code terminal")
+    print_error("4. On Mac, try installing sherlock globally: pip3 install sherlock-project")
 
     return None
 
@@ -222,6 +318,7 @@ def spy_on_username() -> None:
 
         # Create output directories if they don't exist
         import os
+        import platform
         output_dir = "Output Spy"
         os.makedirs(output_dir, exist_ok=True)
 
@@ -276,8 +373,23 @@ def spy_on_username() -> None:
                         # Ignore errors when trying to clean up
                         pass
         else:
-            print_error("Failed to run sherlock. Please make sure it's installed correctly.")
-            print_info("You can install it with: pip install sherlock-project")
+            print_error("Failed to run sherlock. Please try the following:")
+
+            # Provide platform-specific guidance
+            if platform.system() == "Darwin":  # macOS
+                print_error("For Mac users:")
+                print_error("1. Make sure sherlock is installed: pip3 install sherlock-project")
+                print_error("2. Try installing sherlock globally: sudo pip3 install sherlock-project")
+                print_error("3. Make sure you're running the app from the terminal where you activated the virtual environment")
+            else:
+                print_error("1. Make sure sherlock is installed: pip install sherlock-project")
+                print_error("2. Try activating your virtual environment before running the script")
+                print_error("3. Try running the script from VS Code terminal")
 
     except Exception as e:
         print_error(f"Error in spy_on_username: {str(e)}")
+
+        # Provide more detailed error information
+        import traceback
+        print_error("Detailed error information:")
+        print_error(traceback.format_exc())

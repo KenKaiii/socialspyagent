@@ -157,6 +157,27 @@ if [ $? -ne 0 ]; then
 fi
 print_success "Dependencies installed successfully."
 
+# Ensure sherlock is properly installed (especially important for Mac)
+print_colored "Verifying sherlock installation..."
+if ! python -c "import sherlock_project" &> /dev/null; then
+    print_warning "Sherlock module not found. Installing it directly..."
+    pip install sherlock-project
+    if [ $? -ne 0 ]; then
+        print_warning "Failed to install sherlock with pip. Trying pip3..."
+        pip3 install sherlock-project
+        if [ $? -ne 0 ]; then
+            print_error "Failed to install sherlock. You may need to install it manually."
+            print_info "For Mac users, try: sudo pip3 install sherlock-project"
+        else
+            print_success "Sherlock installed successfully with pip3."
+        fi
+    else
+        print_success "Sherlock installed successfully."
+    fi
+else
+    print_success "Sherlock is already installed."
+fi
+
 # Create .env file from template
 print_colored "Creating .env file from template..."
 if [ ! -f .env ]; then
