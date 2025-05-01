@@ -1,0 +1,10 @@
+google-api-python-client==2.107.0
+google-auth==2.23.4
+google-auth-oauthlib==1.1.0
+google-auth-httplib2==0.1.1
+python-dotenv==1.0.0
+requests==2.31.0
+pydantic==2.4.2
+rich==13.6.0
+pyfiglet==1.0.2
+sherlock-project==0.15.0
