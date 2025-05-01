@@ -180,7 +180,7 @@ echo "   source venv/bin/activate"
 echo ""
 echo -e "\033[1;35m===== Setup Complete =====\033[0m"
 
-# Make the script executable
+# Ensure the script is executable
 chmod +x setup.sh
 
 # Pause before exit
