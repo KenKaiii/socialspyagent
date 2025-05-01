@@ -21,7 +21,7 @@ print_error() {
 }
 
 # Display header
-print_colored "SocialSpyAgent Launcher" "CYAN"
+print_colored "===== SocialSpyAgent Launcher =====" "CYAN"
 echo
 
 # Check if virtual environment exists
@@ -67,3 +67,8 @@ if [ $? -ne 0 ]; then
 else
     print_success "Application closed successfully."
 fi
+
+# Pause before exit
+echo
+echo "Press Enter to exit..."
+read
