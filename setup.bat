@@ -1,6 +1,7 @@
 @echo off
 
 echo ===== SocialSpyAgent Setup =====
+echo By Ken Kai does AI - https://www.youtube.com/@kenkaidoesai
 echo.
 
 REM Check if Python is installed

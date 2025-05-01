@@ -41,6 +41,7 @@ echo ""
 
 # Print welcome message
 echo -e "\033[1;35m===== Setting up SocialSpyAgent =====\033[0m"
+echo -e "\033[1;36mBy Ken Kai does AI - https://www.youtube.com/@kenkaidoesai\033[0m"
 echo ""
 
 # Check if Python is installed

@@ -2,6 +2,7 @@
 setlocal
 
 echo ===== SocialSpyAgent Launcher =====
+echo By Ken Kai does AI - https://www.youtube.com/@kenkaidoesai
 echo.
 
 REM Check if virtual environment exists

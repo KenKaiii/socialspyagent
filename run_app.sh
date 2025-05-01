@@ -22,6 +22,7 @@ print_error() {
 
 # Display header
 print_colored "===== SocialSpyAgent Launcher =====" "CYAN"
+print_colored "By Ken Kai does AI - https://www.youtube.com/@kenkaidoesai" "CYAN"
 echo
 
 # Check if virtual environment exists
