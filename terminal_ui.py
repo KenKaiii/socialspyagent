@@ -820,6 +820,8 @@ def welcome_screen() -> None:
     """Display a welcome screen for SocialSpyAgent."""
     console.clear()
     print_ascii_banner("SocialSpyAgent")
+    console.print("By Ken Kai does AI - https://www.youtube.com/@kenkaidoesai", style="bold cyan")
+    print()
     print_panel(
         "Welcome to SocialSpyAgent - Your Social Media Intelligence Tool",
         title="About"
@@ -833,6 +835,8 @@ def exit_screen() -> None:
     """Display a goodbye screen for SocialSpyAgent."""
     console.clear()
     print_ascii_banner("Keep spyin'!", font="big", style="bold green")
+    console.print("By Ken Kai does AI - https://www.youtube.com/@kenkaidoesai", style="bold green")
+    print()
     print_panel(
         "SocialSpyAgent has completed all operations successfully.",
         title="Goodbye"
