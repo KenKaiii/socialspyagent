@@ -26,18 +26,13 @@ echo Virtual environment activated successfully.
 
 REM Check if requirements are installed
 echo Checking dependencies...
-pip show sherlock-project >nul 2>&1
+echo Installing/updating all dependencies...
+pip install -r requirements.txt
 if %ERRORLEVEL% NEQ 0 (
-    echo Installing dependencies...
-    pip install -r requirements.txt
-    if %ERRORLEVEL% NEQ 0 (
-        echo Failed to install dependencies.
-        goto :end
-    )
-    echo Dependencies installed successfully.
-) else (
-    echo Dependencies already installed.
+    echo Failed to install dependencies.
+    goto :end
 )
+echo Dependencies installed successfully.
 
 REM Run the application
 echo Starting SocialSpyAgent...

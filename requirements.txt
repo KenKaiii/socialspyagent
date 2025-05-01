@@ -8,3 +8,4 @@ pydantic==2.4.2
 rich==13.6.0
 pyfiglet==1.0.2
 sherlock-project==0.15.0
+tqdm==4.66.1

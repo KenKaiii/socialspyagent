@@ -46,18 +46,13 @@ print_success "Virtual environment activated successfully."
 
 # Check if requirements are installed
 print_colored "Checking dependencies..." "CYAN"
-pip show sherlock-project > /dev/null 2>&1
+print_colored "Installing/updating all dependencies..." "YELLOW"
+pip install -r requirements.txt
 if [ $? -ne 0 ]; then
-    print_colored "Installing dependencies..." "YELLOW"
-    pip install -r requirements.txt
-    if [ $? -ne 0 ]; then
-        print_error "Failed to install dependencies."
-        exit 1
-    fi
-    print_success "Dependencies installed successfully."
-else
-    print_success "Dependencies already installed."
+    print_error "Failed to install dependencies."
+    exit 1
 fi
+print_success "Dependencies installed successfully."
 
 # Run the application
 print_colored "Starting SocialSpyAgent..." "CYAN"
