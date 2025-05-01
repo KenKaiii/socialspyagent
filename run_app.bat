@@ -6,13 +6,8 @@ echo.
 
 REM Check if virtual environment exists
 if not exist venv (
-    echo Virtual environment not found. Setting up...
-    python -m venv venv
-    if %ERRORLEVEL% NEQ 0 (
-        echo Failed to create virtual environment. Please make sure Python is installed.
-        goto :end
-    )
-    echo Virtual environment created successfully.
+    echo Virtual environment not found. Please run setup.bat first.
+    goto :end
 )
 
 REM Activate virtual environment
@@ -23,16 +18,6 @@ if %ERRORLEVEL% NEQ 0 (
     goto :end
 )
 echo Virtual environment activated successfully.
-
-REM Check if requirements are installed
-echo Checking dependencies...
-echo Installing/updating all dependencies...
-pip install -r requirements.txt
-if %ERRORLEVEL% NEQ 0 (
-    echo Failed to install dependencies.
-    goto :end
-)
-echo Dependencies installed successfully.
 
 REM Run the application
 echo Starting SocialSpyAgent...

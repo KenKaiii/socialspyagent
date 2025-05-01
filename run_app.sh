@@ -26,13 +26,8 @@ echo
 
 # Check if virtual environment exists
 if [ ! -d "venv" ]; then
-    print_colored "Virtual environment not found. Setting up..." "YELLOW"
-    python3 -m venv venv
-    if [ $? -ne 0 ]; then
-        print_error "Failed to create virtual environment. Please make sure Python is installed."
-        exit 1
-    fi
-    print_success "Virtual environment created successfully."
+    print_error "Virtual environment not found. Please run setup.sh first."
+    exit 1
 fi
 
 # Activate virtual environment
@@ -43,16 +38,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 print_success "Virtual environment activated successfully."
-
-# Check if requirements are installed
-print_colored "Checking dependencies..." "CYAN"
-print_colored "Installing/updating all dependencies..." "YELLOW"
-pip install -r requirements.txt
-if [ $? -ne 0 ]; then
-    print_error "Failed to install dependencies."
-    exit 1
-fi
-print_success "Dependencies installed successfully."
 
 # Run the application
 print_colored "Starting SocialSpyAgent..." "CYAN"
